@@ -1,32 +1,23 @@
 <!doctype html>
-<html lang="">
+<html>
   <head>
     <meta name="emotion-insertion-point" content="" />
     <style>
-      .wf-force-outline-none[tabindex="-1"]:focus {
+      .wf-force-outline-none[tabindex='-1']:focus {
         outline: none;
       }
     </style>
     <meta charset="utf-8" />
-    <title>Nitra Payment System</title>
-    <meta
-      content="A fluent and auick payment flow gives you better experience."
-      name="description"
-    />
-    <meta content="Nitra Payment System" property="og:title" />
-    <meta
-      content="A fluent and auick payment flow gives you better experience."
-      property="og:description"
-    />
+    <title><%= productName %></title>
+    <meta content="<%= productDescription %>" name="description" />
+    <meta content="<%= productName %>" property="og:title" />
+    <meta content="<%= productDescription %>" property="og:description" />
     <meta
       content="https://cdn.prod.website-files.com/6411d4e93903db4ee3ba6a6f/6440f4d719ec772c8ecb436f_Nitra-OpenGraph.png"
       property="og:image"
     />
-    <meta content="Nitra Payment System" property="twitter:title" />
-    <meta
-      content="A fluent and auick payment flow gives you better experience."
-      property="twitter:description"
-    />
+    <meta content="<%= productName %>" property="twitter:title" />
+    <meta content="<%= productDescription %>" property="twitter:description" />
     <meta
       content="https://cdn.prod.website-files.com/6411d4e93903db4ee3ba6a6f/6440f4d719ec772c8ecb436f_Nitra-OpenGraph.png"
       property="twitter:image"
@@ -54,8 +45,8 @@
       rel="apple-touch-icon"
     />
   </head>
+
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <!-- quasar:entry-point -->
   </body>
 </html>
