@@ -1,6 +1,6 @@
 <template>
-  <q-layout class="main-layout" view="lHh Lpr lFf">
-    <custom-header :title="$t('header.TITLE')" extra="reset-payment"></custom-header>
+  <q-layout class="main-layout">
+    <custom-header :title="$t('header.TITLE')"> </custom-header>
 
     <q-page-container>
       <router-view />

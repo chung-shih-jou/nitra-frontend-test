@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full justify-center h-full p-6">
+  <div class="payment-summary w-full justify-center h-full p-6">
     <div class="text-[--md] font-bold">{{ $t('paymentSummary.TITLE') }}</div>
     <q-separator spaced inset class="-mx-6" />
     <div>
@@ -13,13 +13,14 @@
         <list-item
           variant="secondary"
           size="sm"
-          :title="`${$t('paymentSummary.TAX')}(${fillDecimalPlaces(Number(tax), 2)}%)`"
-          :value="taxResult"
+          :title="`${$t('paymentSummary.TAX')}(${fillDecimalPlaces(Number(tax) * 100, 2)}%)`"
+          :value="taxTotal"
         />
         <q-separator spaced inset class="bg-[--teal-700]" />
-        <list-item :title="$t('paymentSummary.TOTAL')" :value="total" />
+        <list-item :title="$t('paymentSummary.TOTAL')" :value="paymentAmount" />
         <q-btn-toggle
-          v-model="paymentType"
+          :modelValue="paymentType"
+          @update:model-value="$emit('changePaymentType', $event)"
           color="white"
           toggle-color="[--teal-100]"
           toggle-text-color="[--teal-700]"
@@ -37,37 +38,112 @@
           "
         >
           <template v-for="{ key, icon } in PaymentOptions" v-slot:[key] :key="key">
-            <q-icon size="xs" class="text-[--teal-700]" left :name="'fa-solid ' + icon"></q-icon>
+            <q-icon class="text-[--teal-700]" left :name="'fa-solid ' + icon"></q-icon>
             <span class="text-[16px]">{{ $t(`paymentSummary.PAY_BY_${key}`) }}</span>
           </template>
         </q-btn-toggle>
+        <list-item class="text-[15px]" :value="patientFee" v-if="paymentType === PaymentTypes.CARD">
+          <template #title>
+            {{ $t('paymentSummary.PAY_BY_CARD_FEE') }}
+            <q-btn
+              flat
+              no-caps
+              class="p-0 underline text-[--teal-100]"
+              @click="() => onEdit(PaymentModelKeys.PROCESSING_FEE)"
+              >{{ $t('paymentSummary.EDIT') }}</q-btn
+            >
+          </template>
+        </list-item>
         <q-separator spaced inset class="bg-[--teal-700]" />
         <list-item
           :bold="true"
           :title="$t(`paymentSummary.PAY_BY_${paymentType}_TOTAL`)"
-          :value="extraPaymentFee"
-          value-color="text-[--green-500]"
+          :value="total"
+          :value-color="disabledPay ? 'text-[--red-500]' : 'text-[--green-500]'"
         />
+        <div v-if="disabledPay" class="text-[--red-500] text-[10px]">
+          {{ $t('paymentSummary.WARNING_MINIMUM', { min: fillDecimalPlaces(MINIMUM_AMOUNT, 2) }) }}
+        </div>
       </q-list>
     </div>
     <q-separator spaced inset class="-mx-6" />
 
     <div class="row no-wrap flex-col gap-4">
+      <selector icon="fa-location-dot" v-model="selectedLocation" :options="locations" />
       <selector
-        icon="fa-location-dot"
-        class-name="bg-transparent"
-        v-model="selectedLocation"
-        :options="locations"
+        v-if="paymentType === PaymentTypes.CARD"
+        label="Device Reader"
+        class="bg-[--gray-50] w-full"
+        v-model="selectedReader"
+        :options="readersOptions"
       >
-      </selector>
+        <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
+          <q-item
+            v-bind="itemProps"
+            :class="selected ? 'bg-[--gray-50]' : ''"
+            @click="toggleOption(opt)"
+          >
+            <q-item-section>
+              <q-icon
+                size="xs"
+                :class="opt.disabled ? 'text-[--gray-400]' : 'text-[--green-500]'"
+                :name="opt.disabled ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-dot'"
+              />
+            </q-item-section>
+            <q-item-section side :class="selected ? '' : 'text-[--gray-400]'">
+              {{ opt.label }}
+            </q-item-section>
+          </q-item>
+        </template></selector
+      >
       <q-btn
+        v-if="paymentType === PaymentTypes.CASH"
+        :disabled="disabledPay"
         class="bg-[--orange-400] w-full"
         no-caps
         icon="fa-solid fa-money-bill-wave"
         color="orange-400"
         :label="$t('paymentSummary.LOG_PAYMENT')"
       ></q-btn>
+      <div v-else class="flex gap-4">
+        <q-btn
+          :disabled="disabledPay"
+          class="rounded-md text-white bg-[--orange-400] w-full"
+          :flat="true"
+          no-caps
+          icon="fa-solid fa-mobile-screen"
+          color="orange-400"
+          :label="$t('paymentSummary.PAY_BY_READER')"
+          @click="() => onEdit(PaymentModelKeys.READER_PAYMENT)"
+        ></q-btn>
+        <q-btn
+          :flat="true"
+          :disabled="disabledPay"
+          class="rounded-md bg-[--orange-50] text-[--orange-400] w-full"
+          no-caps
+          icon="fa-solid fa-credit-card"
+          :label="$t('paymentSummary.PAY_MANUAL')"
+          @click="() => onEdit(PaymentModelKeys.MANUAL_PAYMENT)"
+        ></q-btn>
+      </div>
     </div>
+    <EditProcessingFeeModal
+      :open="modalKey === PaymentModelKeys.PROCESSING_FEE"
+      @cancel="onCancleModal"
+      :totalProcessingFee="totalProcessingFee"
+      :taxRate="1 - patientTaxRate"
+      @update="onUpdateProcessingFee"
+    />
+    <ReaderPaymentModal
+      :open="modalKey === PaymentModelKeys.READER_PAYMENT"
+      @cancel="onCancleModal"
+      @update="onFinishPayment"
+    />
+    <CreditCardFormModal
+      :open="modalKey === PaymentModelKeys.MANUAL_PAYMENT"
+      @cancel="onCancleModal"
+      @update="onFinishPayment"
+    />
   </div>
 </template>
 <sript lang="ts">
@@ -77,16 +153,31 @@ export default {
 </sript>
 
 <script setup lang="ts">
-import { inject, defineProps, ref } from 'vue';
+import { watch, inject, ref } from 'vue';
+import type { Ref } from 'vue';
 
 import ListItem from './ListItem.vue';
 import Selector from './Selector.vue';
+import EditProcessingFeeModal from './EditProcessingFeeModal.vue';
+import ReaderPaymentModal from './ReaderPaymentModal.vue';
+import CreditCardFormModal from './CreditCardFormModal.vue';
 
-import { PaymentTypes } from '../defines/payment';
+import { PaymentTypes, MINIMUM_AMOUNT, PaymentModelKeys } from '../defines/payment';
 import { fillDecimalPlaces, roundedValue } from '../methods/calc';
+import type { IOrganization, IPaymentLocationReader } from '../apis/data.interface';
 
 const locations = inject('locations') as { label: string; value: any }[];
-const selectedLocation = inject('selectedLocation');
+const readers = inject('readers') as Ref<
+  ({ label: string; value: any } & IPaymentLocationReader)[]
+>;
+const selectedLocation = inject('selectedLocation') as Ref<number | null>;
+const selectedReader = inject('selectedReader');
+const modalKey = ref('');
+
+const disabledPay = ref(true);
+const readersOptions = ref<
+  ({ label: string; value: any; disabled: boolean } & IPaymentLocationReader)[]
+>([]);
 
 const props = defineProps({
   title: {
@@ -94,10 +185,6 @@ const props = defineProps({
     default: '',
   },
   subtotal: {
-    type: [Number, String],
-    required: true,
-  },
-  total: {
     type: [Number, String],
     required: true,
   },
@@ -109,7 +196,20 @@ const props = defineProps({
     type: String,
     default: PaymentTypes.CASH,
   },
+  organiztion: {
+    type: Object as () => IOrganization,
+    default: () => ({}),
+    required: true,
+  },
 });
+
+const taxTotal = ref(0);
+const patientTaxRate = ref(0);
+const totalProcessingFee = ref(0);
+const patientFee = ref(0);
+const total = ref(0);
+const paymentAmount = ref(0);
+
 const PaymentOptions = [
   {
     icon: 'fa-sack-dollar',
@@ -120,10 +220,83 @@ const PaymentOptions = [
     key: PaymentTypes.CARD,
   },
 ];
-const paymentType = ref(props.paymentType);
 
-const taxResult = roundedValue(Number(props.subtotal) * Number(props.tax), 2);
-const extraPaymentFee = roundedValue(Number(props.subtotal) * Number(props.tax), 2);
+watch(
+  () => [total.value],
+  () => {
+    disabledPay.value = total.value < MINIMUM_AMOUNT;
+  },
+  { deep: true },
+);
+watch(
+  () => [patientFee.value, paymentAmount.value],
+  () => {
+    total.value = patientFee.value + paymentAmount.value;
+  },
+);
+watch(
+  () => [readers, selectedLocation],
+  () => {
+    readersOptions.value = readers.value.map((reader) => ({
+      ...reader,
+      label: reader.label,
+      value: reader.value,
+      disabled: selectedLocation.value !== reader.locationId,
+    }));
+  },
+  { deep: true },
+);
+watch(
+  () => [props.subtotal, props.tax],
+  () => {
+    taxTotal.value = roundedValue(Number(props.subtotal) * Number(props.tax), 2);
+  },
+);
 
-console.log(props);
+watch(
+  () => [props.subtotal, taxTotal.value],
+  () => {
+    paymentAmount.value = taxTotal.value + Number(props.subtotal);
+  },
+);
+
+watch(
+  () => [props.paymentType, props.organiztion, paymentAmount.value],
+  () => {
+    if (props.paymentType === PaymentTypes.CARD) {
+      totalProcessingFee.value =
+        roundedValue(
+          paymentAmount.value * Number(props.organiztion.totalProcessingFeePercentage),
+          2,
+        ) + props.organiztion.totalProcessingFeeFixed;
+    } else {
+      totalProcessingFee.value = 0;
+    }
+  },
+);
+
+function onCancleModal() {
+  modalKey.value = '';
+}
+function onEdit(key: string) {
+  modalKey.value = key;
+}
+function onUpdateProcessingFee(data: { taxRate: number; patientFee: number; merchantFee: number }) {
+  patientTaxRate.value = data.taxRate;
+  modalKey.value = '';
+  patientFee.value = data.patientFee;
+  total.value = data.patientFee + paymentAmount.value;
+}
+function onFinishPayment() {
+  modalKey.value = '';
+}
 </script>
+
+<style lang="sass">
+
+.payment-summary .q-field__control
+  width: 100%
+
+.payment-summary .q-icon.on-left
+  font-size: 1rem
+</style>

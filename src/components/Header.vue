@@ -9,9 +9,6 @@
       :options="locations"
     >
     </selector>
-    <div class="ml-auto text-black">
-      {{ extra }}
-    </div>
   </q-header>
 </template>
 
@@ -62,8 +59,7 @@ withDefaults(
 .main-layout .q-field__marginal
   height: initial
 
-.main-layout .q-select__dropdown-icon, .q-layout__shadow
-  display: none
+
 .main-layout .q-field__after
     padding: 0
 </style>

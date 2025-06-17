@@ -1,10 +1,21 @@
 export default {
   header: {
     TITLE: 'Collect Payment',
+    RESET_PAYMENT: 'Reset Payment',
+  },
+  editProcessingFeeModal: {
+    TITLE: 'Edit Merchant Processing Fee',
+    DESCRIPTION: 'Only applies to this transaction',
+    MERCHANT_PROCESSING_FEE: 'Merchant Processing Fee',
+    PATIENT_PROCESSING_FEE: 'Patient Processing Fee',
+    SET_TO_DEFAULT: 'Set patient processing fee to 0',
+    SUMMARY: 'On this ${total} transaction, you pay ${merchantFee}, and patient pays ${patientFee}',
   },
   paymentSummary: {
     TITLE: 'Summary',
     TOTAL: 'Total',
+    EDIT: 'Edit',
+    PAY_BY_CARD_FEE: 'Patient Card Processing Fee',
     PAY_BY_CASH_TOTAL: 'Pay by Cash Total',
     PAY_BY_CARD_TOTAL: 'Pay by Card Total',
     PAY_BY_CASH: 'Pay by Cash',
@@ -12,9 +23,32 @@ export default {
     SUBTOTAL: 'Subtotal',
     TAX: 'Tax',
     LOG_PAYMENT: 'Log Payment',
+    PAY_BY_READER: 'Initiate Payment on Reader',
+    PAY_MANUAL: 'Input Card Number Manually',
+    WARNING_MINIMUM: '*Total amount falls below the required minimum of ${min}',
   },
   view: {
+    COUNTRY: 'country',
+    PAY_MONEY: 'Pay ${amount}',
+    UPDATE: 'Update',
+    CANCEL: 'Cancel',
+    PROCESS_PAYMENT: 'Process Payment',
     ENTER_AMOUNT: 'Enter amount',
     DESCRIPTION_OPTIONAL: 'Description (optional)',
+  },
+  readerPaymentModal: {
+    TITLE: 'Review Details with Patient',
+    DESCRIPTION:
+      'Review details of this transaction with the customer on the device reader. If everything looks good, proceed to process payment.',
+    PROCESS_PAYMENT: 'Auto-Processing in {time}s',
+    HINT: 'Or click “Process Payment” below',
+  },
+  creditCardForm: {
+    TITLE: 'Credit Card Details',
+    NAME: 'Name on Card',
+    CARD_NUMBER: 'Card Number',
+    CVC: 'CVC',
+    ZIP_CODE: 'ZIP',
+    EXPIRE_DATE: 'Expiration Date',
   },
 };

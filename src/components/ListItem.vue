@@ -1,7 +1,7 @@
 <template>
   <q-item :class="_variant.title">
     <q-item-section>
-      <q-item-label>{{ title }}</q-item-label>
+      <q-item-label>{{ title }}<slot name="title" /></q-item-label>
     </q-item-section>
     <q-item-section :class="valueColor" side> ${{ value }} </q-item-section>
   </q-item>
@@ -13,7 +13,6 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { defineProps } from 'vue';
 const props = defineProps({
   variant: {
     type: String,
@@ -34,7 +33,7 @@ const props = defineProps({
     default: false,
   },
   title: {
-    type: String,
+    type: [String],
     default: '',
   },
   value: {

@@ -1,10 +1,11 @@
 <template>
   <q-select
-    :loading="loading"
+    v-bind:loading="loading"
     emit-value
+    :popup-no-route-dismiss="false"
     map-options
-    :class="`bg-[--gray-100] rounded-[8px] p-2 items-center w-[180px] ${className}`"
-    v-model="_value"
+    :class="`custom-selector bg-[--gray-100] rounded-[8px] p-2 items-center w-[180px] ${className}`"
+    :modelValue="value"
     :options="options"
   >
     <template v-slot:prepend v-if="icon">
@@ -12,6 +13,23 @@
     </template>
     <template v-slot:after>
       <q-icon size="xs" class="text-[#b6bfc3]" name="fa-solid fa-angle-down" />
+    </template>
+    <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
+      <slot
+        v-if="Object.keys($slots).includes('option')"
+        name="option"
+        v-bind="{ itemProps, opt, selected, toggleOption }"
+      />
+      <q-item
+        v-else
+        v-bind="itemProps"
+        :class="selected ? 'bg-[--gray-50]' : ''"
+        @click="toggleOption(opt)"
+      >
+        <q-item-section>
+          <q-item-label>{{ opt.label }}</q-item-label>
+        </q-item-section>
+      </q-item>
     </template>
   </q-select>
 </template>
@@ -22,7 +40,10 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { useSlots } from 'vue';
+const slots = useSlots();
+
+console.log('Selector slots:', slots);
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -45,7 +66,10 @@ const props = defineProps({
     default: '',
   },
 });
-
-const _value = props.value;
-const loading = props.loading;
+console.log('Selector props:', props);
 </script>
+
+<style lang="sass">
+.custom-selector .q-select__dropdown-icon, .q-layout__shadow
+  display: none
+</style>
