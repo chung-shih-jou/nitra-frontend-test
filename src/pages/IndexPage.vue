@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="z-[10000] absolute top-[20px] right-6">
+    <div class="z-[10000] absolute top-[23px] right-6">
       <div class="flex gap-2 items-center">
         <q-btn no-caps flat @click="onReset" :class="['text-[--red-400]', canReset ? '' : 'hidden']"
           >{{ $t('header.RESET_PAYMENT') }}
@@ -12,6 +12,7 @@
                 clickable
                 v-close-popup
                 :key="key"
+                :class="['text-sm', selectedLanguage === value ? 'bg-[--gray-100]' : '']"
                 v-for="[key, value] in Object.entries(LANGUAGES)"
               >
                 <q-item-section @click="() => changeLanguage(value)">{{
@@ -24,7 +25,7 @@
       </div>
     </div>
     <q-page
-      class="home-page mx-6 mb-6 grid grid-cols-3 items-start justify-evenly border-[1px] border-solid border-[--gray-200] rounded-[8px]"
+      class="home-page mx-6 mb-6 grid sm:grid-cols-3 grid-cols-1 items-start justify-evenly border-[1px] border-solid border-[--gray-200] rounded-[8px]"
     >
       <div class="col-span-2 p-6 text-center grid justify-center items-center gap-2">
         <div class="text-[--gray-700]">
@@ -41,7 +42,9 @@
           />
         </div>
       </div>
-      <div class="col-span-1 border-l-[1px] border-solid border-[--gray-200] h-full">
+      <div
+        class="col-span-1 border-t-[1px] sm:border-t-0 sm:border-l-[1px] border-solid border-[--gray-200] h-full"
+      >
         <payment-summary
           :paymentType="paymentType"
           :subtotal="subtotal"
@@ -66,6 +69,7 @@ import LANGUAGES from '../defines/language';
 
 const description = ref('');
 const subtotal = ref(0);
+const selectedLanguage = inject('language') as Ref<string>;
 const selectedLocation = inject('selectedLocation') as Ref<number | null>;
 const locations = inject('locations') as Ref<ILocation[]>;
 const organiztion = inject('organization') as Ref<IOrganization>;
@@ -108,4 +112,5 @@ function onReset() {
 .home-page .amount-textarea .q-field__control
   width: 100%
   min-width: 400px
+  background: transparent
 </style>

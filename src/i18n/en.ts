@@ -31,7 +31,7 @@ export default {
   view: {
     ENGLISH: 'English',
     CHINESE: 'Chinese',
-    COUNTRY: 'country',
+    COUNTRY: 'Country',
     PAY_MONEY: 'Pay ${amount}',
     UPDATE: 'Update',
     CANCEL: 'Cancel',

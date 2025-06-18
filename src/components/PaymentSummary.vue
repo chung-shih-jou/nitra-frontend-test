@@ -8,7 +8,7 @@
           class="text-sm"
           variant="secondary"
           :title="$t('paymentSummary.SUBTOTAL')"
-          :value="subtotal"
+          :value="fillDecimalPlaces(Number(subtotal), 2)"
         />
         <list-item
           variant="secondary"
@@ -21,7 +21,7 @@
           class="text-sm mt-4"
           value-color="text-black"
           :title="$t('paymentSummary.TOTAL')"
-          :value="paymentAmount"
+          :value="fillDecimalPlaces(paymentAmount, 2)"
         />
         <q-btn-toggle
           :modelValue="paymentType"
@@ -68,7 +68,7 @@
           :bold="true"
           class="text-xs"
           :title="$t(`paymentSummary.PAY_BY_${paymentType}_TOTAL`)"
-          :value="total"
+          :value="fillDecimalPlaces(total, 2)"
           :value-color="disabledPay ? 'text-xl text-[--red-500]' : 'text-xl text-[--green-500]'"
         />
         <div v-if="disabledPay" class="px-4 text-xs text-[--red-500]">

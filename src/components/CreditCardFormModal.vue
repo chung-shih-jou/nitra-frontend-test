@@ -1,6 +1,6 @@
 <template>
   <q-dialog :modelValue="open" @update:model-value="onCancle">
-    <q-card class="bg-white p-4">
+    <q-card class="sm:w-auto w-[95%] bg-white p-4">
       <q-card-section>
         <div class="text-h6">
           {{ $t('creditCardForm.TITLE') }}
@@ -21,7 +21,7 @@
             :class="` w-full`"
             v-model="form.cardNumber"
           />
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid sm:grid-cols-2 gap-2">
             <q-input
               :class="` w-full`"
               :placeholder="$t('creditCardForm.EXPIRE_DATE')"
@@ -35,12 +35,12 @@
               v-model="form.cvc"
             />
           </div>
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid sm:grid-cols-2 gap-2">
             <selector
               borderless
               :class="`py-0  w-full !bg-[#f2f2f2] rounded-[4px]`"
               v-model="form.country"
-              :options="countryOptions"
+              :options="CountryOptions"
               :label="$t('view.COUNTRY')"
             />
             <q-input
@@ -78,6 +78,8 @@ import { ref } from 'vue';
 
 import Selector from './Selector.vue';
 
+import CountryOptions from '../defines/country';
+
 const emits = defineEmits(['cancel', 'update']);
 const props = defineProps({
   open: {
@@ -90,13 +92,6 @@ const props = defineProps({
   },
 });
 
-const countryOptions = [
-  { label: 'United States', value: 'US' },
-  { label: 'Canada', value: 'CA' },
-  { label: 'United Kingdom', value: 'UK' },
-  { label: 'Australia', value: 'AU' },
-  // Add more countries as needed
-];
 const form = ref({
   cardNumber: '',
   fullName: '',

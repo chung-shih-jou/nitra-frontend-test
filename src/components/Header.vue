@@ -1,9 +1,10 @@
 <template>
-  <q-header elevated class="gap-2 items-center flex p-6 bg-transparent">
+  <q-header elevated class="gap-2 items-center sm:flex grid p-6 bg-transparent">
     <!-- <img src="../assets/logo.svg" alt="Nitra Logo" /> -->
     <h2 class="text-2xl text-bold text-black">{{ title }}</h2>
     <selector
       icon="fa-location-dot"
+      class="sm:w-fit w-full"
       :loading="loading"
       v-model="selectedLocation"
       :options="locations"

@@ -38,8 +38,11 @@
         <q-separator spaced="16px" class="bg-[--gray-50]" />
         <div class="flex gap-4 text-center items-center">
           <div class="flex gap-2 items-center text-sm">
-            {{ $t('editProcessingFeeModal.MERCHANT_PROCESSING_FEE') }}
-            <span class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px]"
+            <div class="sm:w-fit w-full">
+              {{ $t('editProcessingFeeModal.MERCHANT_PROCESSING_FEE') }}
+            </div>
+            <span
+              class="rounded-md bg-[--gray-50] p-2 font-bold text-xl sm:min-w-[80px] w-[calc(50%_-_80px)]"
               >{{ roundedValue(Number(taxRate) * 100, 4)
               }}<span class="ml-2 text-[--gray-700]">%</span></span
             >
@@ -48,7 +51,8 @@
             >
             <span class="text-[--gray-700]"> + </span>
 
-            <span class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px]"
+            <span
+              class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] w-[calc(50%_-_80px)]"
               >${{ fillDecimalPlaces(getMerchantFee(), 2)
               }}<span class="ml-2 text-[--gray-700]"></span
             ></span>
@@ -59,8 +63,12 @@
 
           <div class="flex gap-2 text-center items-center">
             <div class="flex gap-2 items-center text-sm">
-              {{ $t('editProcessingFeeModal.PATIENT_PROCESSING_FEE') }}
-              <span class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px]"
+              <div class="sm:w-fit w-full">
+                {{ $t('editProcessingFeeModal.PATIENT_PROCESSING_FEE') }}
+              </div>
+              g
+              <span
+                class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] w-[calc(50%_-_80px)]"
                 >{{
                   roundedValue(
                     (Number(organization.totalProcessingFeePercentage) - Number(taxRate)) * 100,
@@ -79,7 +87,8 @@
               >
               <span class="text-[--gray-700]"> + </span>
 
-              <span class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px]"
+              <span
+                class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] w-[calc(50%_-_80px)]"
                 >${{ fillDecimalPlaces(getPatientFee(), 2)
                 }}<span class="ml-2 text-[--gray-700]"></span
               ></span>
@@ -96,7 +105,7 @@
                 >{{ $t('editProcessingFeeModal.SET_TO_DEFAULT') }}</q-btn
               >
             </div>
-            <strong class="text-start">
+            <strong>
               {{
                 $t('editProcessingFeeModal.SUMMARY', {
                   total: totalProcessingFee,
@@ -156,7 +165,6 @@ const props = defineProps({
     default: 0,
   },
 });
-console.log(props);
 
 const totalProcessingFeePercentage = ref(0);
 const taxRate = ref(props.defaultTaxRate);
