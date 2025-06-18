@@ -19,11 +19,6 @@ const props = defineProps({
     default: 'primary',
     validator: (value: string) => ['primary', 'secondary'].includes(value),
   },
-  size: {
-    type: String,
-    default: 'md',
-    validator: (value: string) => ['xs', 'sm', 'md', 'lg'].includes(value),
-  },
   valueColor: {
     type: String,
     default: '',
@@ -42,9 +37,6 @@ const props = defineProps({
   },
 });
 const _variant = props.variant === 'primary' ? { title: '' } : { title: 'text-[--gray-700] ' };
-
-if (props.size === 'sm') _variant.title += ' text-[12px]';
-else if (props.size === 'md') _variant.title += ' text-[24px]';
 
 if (props.bold) _variant.title += ' font-bold';
 console.log(props);

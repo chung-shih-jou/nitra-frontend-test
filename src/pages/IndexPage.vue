@@ -1,12 +1,28 @@
 <template>
   <div>
-    <q-btn
-      no-caps
-      flat
-      @click="onReset"
-      class="z-[10000] text-[--red-400] absolute top-[20px] right-6"
-      >{{ $t('header.RESET_PAYMENT') }}
-    </q-btn>
+    <div class="z-[10000] absolute top-[20px] right-6">
+      <div class="flex gap-2 items-center">
+        <q-btn no-caps flat @click="onReset" :class="['text-[--red-400]', canReset ? '' : 'hidden']"
+          >{{ $t('header.RESET_PAYMENT') }}
+        </q-btn>
+        <q-icon name="fa-solid fa-globe" class="text-[--gray-700] cursor-pointer">
+          <q-menu>
+            <q-list style="min-width: 100px">
+              <q-item
+                clickable
+                v-close-popup
+                :key="key"
+                v-for="[key, value] in Object.entries(LANGUAGES)"
+              >
+                <q-item-section @click="() => changeLanguage(value)">{{
+                  $t(`view.${key}`)
+                }}</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-icon>
+      </div>
+    </div>
     <q-page
       class="home-page mx-6 mb-6 grid grid-cols-3 items-start justify-evenly border-[1px] border-solid border-[--gray-200] rounded-[8px]"
     >
@@ -46,14 +62,25 @@ import CommaNumber from '../components/CommaNumber.vue';
 import PaymentSummary from '../components/PaymentSummary.vue';
 import type { ILocation, IOrganization } from '../apis/data.interface';
 import { PaymentTypes } from '../defines/payment';
+import LANGUAGES from '../defines/language';
 
 const description = ref('');
 const subtotal = ref(0);
 const selectedLocation = inject('selectedLocation') as Ref<number | null>;
 const locations = inject('locations') as Ref<ILocation[]>;
 const organiztion = inject('organization') as Ref<IOrganization>;
+const changeLanguage = inject('changeLanguage') as (type: string) => void;
 const tax = ref(0);
 const paymentType = ref(PaymentTypes.CASH);
+const canReset = ref(false);
+
+watch(
+  () => [description.value, subtotal.value, paymentType.value],
+  () => {
+    canReset.value =
+      description.value !== '' || subtotal.value > 0 || paymentType.value !== PaymentTypes.CASH;
+  },
+);
 watch(
   () => selectedLocation?.value,
   (newValue) => {

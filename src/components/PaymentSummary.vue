@@ -1,23 +1,28 @@
 <template>
   <div class="payment-summary w-full justify-center h-full p-6">
     <div class="text-[--md] font-bold">{{ $t('paymentSummary.TITLE') }}</div>
-    <q-separator spaced inset class="-mx-6" />
+    <q-separator spaced="16px" inset class="-mx-6" />
     <div>
-      <q-list>
+      <q-list dense>
         <list-item
+          class="text-sm"
           variant="secondary"
-          size="sm"
           :title="$t('paymentSummary.SUBTOTAL')"
           :value="subtotal"
         />
         <list-item
           variant="secondary"
-          size="sm"
+          class="text-sm"
           :title="`${$t('paymentSummary.TAX')}(${fillDecimalPlaces(Number(tax) * 100, 2)}%)`"
           :value="taxTotal"
         />
-        <q-separator spaced inset class="bg-[--teal-700]" />
-        <list-item :title="$t('paymentSummary.TOTAL')" :value="paymentAmount" />
+        <q-separator spaced="16px" inset class="bg-[--teal-700] -mx-3" />
+        <list-item
+          class="text-sm mt-4"
+          value-color="text-black"
+          :title="$t('paymentSummary.TOTAL')"
+          :value="paymentAmount"
+        />
         <q-btn-toggle
           :modelValue="paymentType"
           @update:model-value="$emit('changePaymentType', $event)"
@@ -38,61 +43,72 @@
           "
         >
           <template v-for="{ key, icon } in PaymentOptions" v-slot:[key] :key="key">
-            <q-icon class="text-[--teal-700]" left :name="'fa-solid ' + icon"></q-icon>
-            <span class="text-[16px]">{{ $t(`paymentSummary.PAY_BY_${key}`) }}</span>
+            <q-icon left :name="'fa-solid ' + icon"></q-icon>
+            <span class="text-[10px]"
+              >{{ $t(`paymentSummary.PAY_BY_${key}`) }} ${{
+                key === PaymentTypes.CARD ? patientFee : 0
+              }}</span
+            >
           </template>
         </q-btn-toggle>
-        <list-item class="text-[15px]" :value="patientFee" v-if="paymentType === PaymentTypes.CARD">
+        <list-item class="text-xs" :value="patientFee" v-if="paymentType === PaymentTypes.CARD">
           <template #title>
             {{ $t('paymentSummary.PAY_BY_CARD_FEE') }}
             <q-btn
               flat
               no-caps
-              class="p-0 underline text-[--teal-100]"
+              class="p-0 underline text-xs text-[--teal-100]"
               @click="() => onEdit(PaymentModelKeys.PROCESSING_FEE)"
               >{{ $t('paymentSummary.EDIT') }}</q-btn
             >
           </template>
         </list-item>
-        <q-separator spaced inset class="bg-[--teal-700]" />
+        <q-separator spaced="16px" inset class="bg-[--teal-700] -mx-3" />
         <list-item
           :bold="true"
+          class="text-xs"
           :title="$t(`paymentSummary.PAY_BY_${paymentType}_TOTAL`)"
           :value="total"
-          :value-color="disabledPay ? 'text-[--red-500]' : 'text-[--green-500]'"
+          :value-color="disabledPay ? 'text-xl text-[--red-500]' : 'text-xl text-[--green-500]'"
         />
-        <div v-if="disabledPay" class="text-[--red-500] text-[10px]">
+        <div v-if="disabledPay" class="px-4 text-xs text-[--red-500]">
           {{ $t('paymentSummary.WARNING_MINIMUM', { min: fillDecimalPlaces(MINIMUM_AMOUNT, 2) }) }}
         </div>
       </q-list>
     </div>
-    <q-separator spaced inset class="-mx-6" />
+    <q-separator spaced="16px" inset class="-mx-6" />
 
     <div class="row no-wrap flex-col gap-4">
-      <selector icon="fa-location-dot" v-model="selectedLocation" :options="locations" />
+      <selector
+        class="bg-transparent"
+        icon="fa-location-dot"
+        v-model="selectedLocation"
+        :options="locations"
+      />
       <selector
         v-if="paymentType === PaymentTypes.CARD"
-        label="Device Reader"
         class="bg-[--gray-50] w-full"
         v-model="selectedReader"
         :options="readersOptions"
+        :label="$t('paymentSummary.DEVICE_READER')"
       >
         <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
           <q-item
             v-bind="itemProps"
             :class="selected ? 'bg-[--gray-50]' : ''"
-            @click="toggleOption(opt)"
+            :disabled="opt.disable"
+            @click="opt.disable ? () => {} : toggleOption(opt)"
           >
-            <q-item-section>
+            <div class="flex gap-2 items-center">
               <q-icon
                 size="xs"
-                :class="opt.disabled ? 'text-[--gray-400]' : 'text-[--green-500]'"
-                :name="opt.disabled ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-dot'"
+                :class="opt.disable ? 'text-[--gray-400]' : 'text-[--green-500]'"
+                :name="opt.disable ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-dot'"
               />
-            </q-item-section>
-            <q-item-section side :class="selected ? '' : 'text-[--gray-400]'">
-              {{ opt.label }}
-            </q-item-section>
+              <span side :class="opt.disable ? 'text-[--gray-400]' : ''">
+                {{ opt.label }}
+              </span>
+            </div>
           </q-item>
         </template></selector
       >
@@ -143,6 +159,7 @@
       :open="modalKey === PaymentModelKeys.MANUAL_PAYMENT"
       @cancel="onCancleModal"
       @update="onFinishPayment"
+      :amount="total"
     />
   </div>
 </template>
@@ -176,7 +193,7 @@ const modalKey = ref('');
 
 const disabledPay = ref(true);
 const readersOptions = ref<
-  ({ label: string; value: any; disabled: boolean } & IPaymentLocationReader)[]
+  ({ label: string; value: any; disable: boolean } & IPaymentLocationReader)[]
 >([]);
 
 const props = defineProps({
@@ -241,7 +258,7 @@ watch(
       ...reader,
       label: reader.label,
       value: reader.value,
-      disabled: selectedLocation.value !== reader.locationId,
+      disable: selectedLocation.value !== reader.locationId,
     }));
   },
   { deep: true },

@@ -28,4 +28,7 @@ onMounted(() => {
 });
 provide('readers', readers);
 provide('selectedReader', selectedReader);
+provide('setSelectedReader', (id: number) => {
+  selectedReader.value = id;
+});
 </script>

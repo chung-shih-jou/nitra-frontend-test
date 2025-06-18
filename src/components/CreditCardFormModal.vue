@@ -38,7 +38,7 @@
           <div class="grid grid-cols-2 gap-2">
             <selector
               borderless
-              :class="`py-0  w-full bg-[#f2f2f2] rounded-[4px]`"
+              :class="`py-0  w-full !bg-[#f2f2f2] rounded-[4px]`"
               v-model="form.country"
               :options="countryOptions"
               :label="$t('view.COUNTRY')"

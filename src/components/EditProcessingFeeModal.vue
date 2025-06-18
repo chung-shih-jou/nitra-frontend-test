@@ -2,11 +2,13 @@
   <q-dialog :modelValue="open" @update:model-value="onCancle">
     <q-card class="bg-white p-4">
       <q-card-section>
-        <div class="text-h6">{{ $t('editProcessingFeeModal.TITLE') }}</div>
+        <div class="font-bold text-2xl">{{ $t('editProcessingFeeModal.TITLE') }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <div class="text-[--gray-700] text-sm">{{ $t('editProcessingFeeModal.DESCRIPTION') }}</div>
+        <div class="text-[--gray-700] text-[12px]">
+          {{ $t('editProcessingFeeModal.DESCRIPTION') }}
+        </div>
         <vue-slider
           v-model="taxRate"
           class="!py-24 !px-6 text-[--teal-400]"
@@ -22,14 +24,14 @@
               v-if="value === 0 || value === 0.035"
               :class="['vue-slider-mark-label', 'text-black', { active }]"
             >
-              {{ roundedValue(value * 100, 2) }}%
+              {{ fillDecimalPlaces(roundedValue(value * 100, 2), 2) }}%
             </div>
             <div v-else />
           </template>
           <template v-slot:tooltip="{ value }">
-            <div class="text-black min-w-[40px] shadow-lg p-2 rounded-md">
-              {{ roundedValue(value * 100, 4) }}%
-              <div class="text-[--gray-700] text-[10px]">$ {{ getMerchantFee() }}</div>
+            <div class="text-black min-w-[60px] shadow-lg p-2 rounded-md">
+              {{ fillDecimalPlaces(roundedValue(value * 100, 4), 2) }}%
+              <div class="text-[--gray-700] text-xs">${{ getMerchantFee() }}</div>
             </div>
           </template>
         </vue-slider>
@@ -37,12 +39,11 @@
         <div class="flex gap-4 text-center items-center">
           <div class="flex gap-2 items-center text-sm">
             {{ $t('editProcessingFeeModal.MERCHANT_PROCESSING_FEE') }}
-            :
             <span class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px]"
               >{{ roundedValue(Number(taxRate) * 100, 4)
               }}<span class="ml-2 text-[--gray-700]">%</span></span
             >
-            <span class="text-[--gray-700] text-[10px]"
+            <span class="text-[--gray-700] text-xs"
               >/ {{ fillDecimalPlaces(totalProcessingFeePercentage, 2) }}%</span
             >
             <span class="text-[--gray-700]"> + </span>
@@ -51,7 +52,7 @@
               >${{ fillDecimalPlaces(getMerchantFee(), 2)
               }}<span class="ml-2 text-[--gray-700]"></span
             ></span>
-            <span class="text-[--gray-700] text-[10px]"
+            <span class="text-[--gray-700] text-xs"
               >/ ${{ fillDecimalPlaces(roundedValue(Number(totalProcessingFee), 2), 2) }}</span
             >
           </div>
@@ -59,7 +60,6 @@
           <div class="flex gap-2 text-center items-center">
             <div class="flex gap-2 items-center text-sm">
               {{ $t('editProcessingFeeModal.PATIENT_PROCESSING_FEE') }}
-              :
               <span class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px]"
                 >{{
                   roundedValue(
@@ -68,7 +68,7 @@
                   )
                 }}<span class="ml-2 text-[--gray-700]">%</span></span
               >
-              <span class="text-[--gray-700] text-[10px]"
+              <span class="text-[--gray-700] text-xs"
                 >/
                 {{
                   fillDecimalPlaces(
@@ -83,14 +83,18 @@
                 >${{ fillDecimalPlaces(getPatientFee(), 2)
                 }}<span class="ml-2 text-[--gray-700]"></span
               ></span>
-              <span class="text-[--gray-700] text-[10px]"
+              <span class="text-[--gray-700] text-xs"
                 >/ ${{ fillDecimalPlaces(roundedValue(Number(totalProcessingFee), 2), 2) }}</span
               >
             </div>
             <div class="w-full text-center">
-              <q-btn flat no-caps class="p-0 underline text-[--teal-400]" @click="setDefault">{{
-                $t('editProcessingFeeModal.SET_TO_DEFAULT')
-              }}</q-btn>
+              <q-btn
+                flat
+                no-caps
+                class="font-normal p-0 underline text-[--teal-400]"
+                @click="setDefault"
+                >{{ $t('editProcessingFeeModal.SET_TO_DEFAULT') }}</q-btn
+              >
             </div>
             <strong class="text-start">
               {{

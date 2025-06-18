@@ -26,8 +26,11 @@ export default {
     PAY_BY_READER: 'Initiate Payment on Reader',
     PAY_MANUAL: 'Input Card Number Manually',
     WARNING_MINIMUM: '*Total amount falls below the required minimum of ${min}',
+    DEVICE_READER: 'Device Reader',
   },
   view: {
+    ENGLISH: 'English',
+    CHINESE: 'Chinese',
     COUNTRY: 'country',
     PAY_MONEY: 'Pay ${amount}',
     UPDATE: 'Update',

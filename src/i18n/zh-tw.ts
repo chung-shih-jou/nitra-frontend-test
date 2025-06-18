@@ -25,9 +25,12 @@ export default {
     LOG_PAYMENT: '記錄付款',
     PAY_BY_READER: '在讀卡器上啟動付款',
     PAY_MANUAL: '手動輸入卡號',
-    WARNING_MINIMUM: '*總金額低於所需的最低金額 ${amount}',
+    WARNING_MINIMUM: '*總金額低於所需的最低金額 ${min}',
+    DEVICE_READER: '設備讀卡器',
   },
   view: {
+    ENGLISH: '英文',
+    CHINESE: '中文',
     COUNTRY: '國家',
     PAY_MONEY: '支付 ${amount}',
     UPDATE: '更新',
