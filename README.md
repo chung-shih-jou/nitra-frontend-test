@@ -8,6 +8,7 @@ It's the Nitra Frontend testing of payment processing, the UI/UX followed by giv
 
 [desktop demo](https://github.com/chung-shih-jou/nitra-frontend-test/blob/main/desktop-demo.mov)
 <video src="https://github.com/chung-shih-jou/nitra-frontend-test/blob/main/desktop-demo.mov" width="100%"/>
+
 [mobile demo](https://github.com/chung-shih-jou/nitra-frontend-test/blob/main/mobile-demo.mov)
 
 ## Functional Requirements:
