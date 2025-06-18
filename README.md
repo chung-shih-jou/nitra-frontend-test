@@ -8,7 +8,8 @@ It's the Nitra Frontend testing of payment processing, the UI/UX followed by giv
 
 #### desktop demo
 
-https://github.com/user-attachments/assets/87aeb679-e717-40a8-af45-5f3f9cf6068c
+https://github.com/user-attachments/assets/8132de33-ab30-4f2e-82ae-44e4c8d83bd8
+
 
 
 #### mobile demo
