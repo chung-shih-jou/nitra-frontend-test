@@ -7,6 +7,7 @@
     :class="`custom-selector bg-[--gray-100] rounded-[8px] p-2 items-center w-[180px] ${className}`"
     :modelValue="value"
     :options="options"
+    bottom-slots
   >
     <template v-slot:prepend v-if="icon">
       <q-icon size="xs" class="text-[#b6bfc3]" :name="'fa-solid ' + icon" />

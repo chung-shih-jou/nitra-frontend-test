@@ -9,44 +9,42 @@
 
       <q-card-section class="q-pt-none q-pb-none">
         <div class="flex flex-col gap-2">
-          <q-input
-            filled
-            :placeholder="$t('creditCardForm.NAME')"
-            :class="` w-full`"
+          <CustomInput
+            :error-msg="errorMsgs.fullName"
+            :placeholder="$t('creditCardForm.FULL_NAME')"
             v-model="form.fullName"
           />
-          <q-input
-            filled
+          <CustomInput
+            :error-msg="errorMsgs.cardNumber"
             :placeholder="$t('creditCardForm.CARD_NUMBER')"
-            :class="` w-full`"
             v-model="form.cardNumber"
           />
           <div class="grid sm:grid-cols-2 gap-2">
-            <q-input
-              :class="` w-full`"
+            <CustomInput
+              :error-msg="errorMsgs.expireDate"
               :placeholder="$t('creditCardForm.EXPIRE_DATE')"
               v-model="form.expireDate"
-              filled
             />
-            <q-input
-              filled
+            <CustomInput
+              :error-msg="errorMsgs.cvc"
               :placeholder="$t('creditCardForm.CVC')"
-              :class="` w-full`"
               v-model="form.cvc"
             />
           </div>
           <div class="grid sm:grid-cols-2 gap-2">
-            <selector
-              borderless
-              :class="`py-0  w-full !bg-[#f2f2f2] rounded-[4px]`"
-              v-model="form.country"
-              :options="CountryOptions"
-              :label="$t('view.COUNTRY')"
-            />
-            <q-input
-              standout
+            <div>
+              <selector
+                borderless
+                :class="`py-0  w-full !bg-[#f2f2f2] rounded-[4px]`"
+                v-model="form.country"
+                :options="CountryOptions"
+                :label="$t('view.COUNTRY')"
+              ></selector>
+              <span class="text-[--red-500] text-xs">{{ errorMsgs.country }}</span>
+            </div>
+            <CustomInput
+              :error-msg="errorMsgs.zipCode"
               :placeholder="$t('creditCardForm.ZIP_CODE')"
-              :class="` w-full`"
               v-model="form.zipCode"
             />
           </div>
@@ -75,10 +73,15 @@ export default {
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import type { Ref } from 'vue';
 
 import Selector from './Selector.vue';
+import CustomInput from './CustomInput.vue';
 
 import CountryOptions from '../defines/country';
+
+const { t } = useI18n();
 
 const emits = defineEmits(['cancel', 'update']);
 const props = defineProps({
@@ -99,13 +102,48 @@ const form = ref({
   country: '',
   zipCode: '',
   expireDate: null,
+}) as Ref<{ [key: string]: any }>;
+const errorMsgs = ref({
+  cardNumber: '',
+  fullName: '',
+  cvc: '',
+  country: '',
+  zipCode: '',
+  expireDate: '',
 });
-console.log(props, form);
+console.log(props, form, errorMsgs);
+
+function validate(callback: (valid: boolean, errors: any) => void) {
+  const needFills = Object.keys(form.value).reduce(
+    (obj, key: string) => {
+      obj[key] = !form.value[key] ? t(`view.REQUIRED`) : '';
+      return obj;
+    },
+    {} as { [key: string]: string },
+  );
+  callback(!Object.values(needFills).filter((v) => !!v).length, needFills);
+}
 function onCancle() {
   emits('cancel');
 }
 function onUpdate() {
-  emits('update');
+  validate((valid, error) => {
+    errorMsgs.value = error;
+    if (!valid) {
+      console.error('Validation failed:', error);
+    } else {
+      console.log('Form is valid:', form.value);
+      emits('update');
+      form.value = {
+        cardNumber: '',
+        fullName: '',
+        cvc: '',
+        country: '',
+        zipCode: '',
+        expireDate: null,
+      };
+    }
+  });
 }
 </script>
 

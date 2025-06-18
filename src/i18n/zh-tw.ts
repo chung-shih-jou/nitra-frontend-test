@@ -29,6 +29,7 @@ export default {
     DEVICE_READER: '設備讀卡器',
   },
   view: {
+    REQUIRED: '必填',
     ENGLISH: '英文',
     CHINESE: '中文',
     COUNTRY: '國家',
@@ -47,7 +48,7 @@ export default {
   },
   creditCardForm: {
     TITLE: '信用卡詳情',
-    NAME: '卡片持有人姓名',
+    FULL_NAME: '卡片持有人姓名',
     CARD_NUMBER: '卡號',
     CVC: 'CVC',
     ZIP_CODE: '郵政編碼',

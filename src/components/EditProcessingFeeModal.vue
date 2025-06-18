@@ -66,7 +66,6 @@
               <div class="sm:w-fit w-full">
                 {{ $t('editProcessingFeeModal.PATIENT_PROCESSING_FEE') }}
               </div>
-              g
               <span
                 class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] w-[calc(50%_-_80px)]"
                 >{{

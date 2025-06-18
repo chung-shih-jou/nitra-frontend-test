@@ -29,6 +29,7 @@ export default {
     DEVICE_READER: 'Device Reader',
   },
   view: {
+    REQUIRED: 'Required',
     ENGLISH: 'English',
     CHINESE: 'Chinese',
     COUNTRY: 'Country',
@@ -48,7 +49,7 @@ export default {
   },
   creditCardForm: {
     TITLE: 'Credit Card Details',
-    NAME: 'Name on Card',
+    FULL_NAME: 'Name on Card',
     CARD_NUMBER: 'Card Number',
     CVC: 'CVC',
     ZIP_CODE: 'ZIP',
