@@ -18,11 +18,63 @@ It's the Nitra Frontend testing of payment processing, the UI/UX followed by giv
 - The total processing fee should dynamically update based on the entered payment amount.
 - Users can choose a non-offline payment reader to process the payment.
 - Patients can manually enter their card details for payment processing.
-- Nice to have: Responsive Web Design (RWD)
+- Responsive Web Design (RWD)
 
 ## Tech Stack:
 
-- Framework (_vue3.3_ with typescript + vite + quasar),
+- Framework (_vue3.3_ with typescript + vite + *quasar*),
 - FontAwesome for icons
-- Nice to have: i18n support (English only for now)
+- English, Chinese i18n support
 - Others: Eslint & Prettier
+
+# How to start?
+
+## install node-module:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+## run in local mode:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+Open [http://localhost:9000](http://localhost:9000) with your browser to see the result.
+
+
+# Structure
+
+- router/
+    - add layout and component to page route
+- provider/
+    - the context provider for global variables or method easily be used between components, ex: the language settings
+- methods/
+    - the pure functions 
+- layouts/
+    - layout components and used by pages components or global components
+- components/
+    - frequently used componenets
+- pages/
+    - connect with router and page components
+    - the outline of view and main functions/variables will be easily to understand what page is doing
+- i18n/
+    - language messages will be used in components
+    - followed by [https://quasar.dev/options/app-internationalization#introduction](vue-i18n)
+    - current support Chinese and English
+- apis/
+    - fetch data folder from backend, only support mock data only, you can see data in apis/mock.ts
+    - use new Promise to await 1s to pretend getting data
+- css/
+    - tailwind and quasar variables
+    - global css, ex: font or body...
+- defines/
+    - the constant define in here.
+- assets/
+    - image/video were put here
+    - if wanting to use assets in html or public.html, try use in public folder
