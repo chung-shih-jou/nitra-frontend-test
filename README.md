@@ -2,6 +2,13 @@
 
 It's the Nitra Frontend testing of payment processing, the UI/UX followed by given figma template, and following requirements:
 
+## Demo:
+
+###detail will decribe below:
+
+[desktop demo](./desktop-demo.mov)
+[mobile demo](./mobile-demo.mov)
+
 ## Functional Requirements:
 
 - Currency: USD
@@ -65,7 +72,7 @@ Open [http://localhost:9000](http://localhost:9000) with your browser to see the
     - the outline of view and main functions/variables will be easily to understand what page is doing
 - i18n/
     - language messages will be used in components
-    - followed by [https://quasar.dev/options/app-internationalization#introduction](vue-i18n)
+    - followed by [vue-i18n](https://quasar.dev/options/app-internationalization#introduction)
     - current support Chinese and English
 - apis/
     - fetch data folder from backend, only support mock data only, you can see data in apis/mock.ts

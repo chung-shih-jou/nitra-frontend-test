@@ -42,7 +42,7 @@
               {{ $t('editProcessingFeeModal.MERCHANT_PROCESSING_FEE') }}
             </div>
             <span
-              class="rounded-md bg-[--gray-50] p-2 font-bold text-xl sm:min-w-[80px] w-[calc(50%_-_80px)]"
+              class="rounded-md bg-[--gray-50] p-2 font-bold text-xl sm:min-w-[80px] sm:w-auto w-[calc(50%_-_80px)]"
               >{{ roundedValue(Number(taxRate) * 100, 4)
               }}<span class="ml-2 text-[--gray-700]">%</span></span
             >
@@ -52,7 +52,7 @@
             <span class="text-[--gray-700]"> + </span>
 
             <span
-              class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] w-[calc(50%_-_80px)]"
+              class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] sm:w-auto w-[calc(50%_-_80px)]"
               >${{ fillDecimalPlaces(getMerchantFee(), 2)
               }}<span class="ml-2 text-[--gray-700]"></span
             ></span>
@@ -67,7 +67,7 @@
                 {{ $t('editProcessingFeeModal.PATIENT_PROCESSING_FEE') }}
               </div>
               <span
-                class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] w-[calc(50%_-_80px)]"
+                class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] sm:w-auto w-[calc(50%_-_80px)]"
                 >{{
                   roundedValue(
                     (Number(organization.totalProcessingFeePercentage) - Number(taxRate)) * 100,
@@ -87,7 +87,7 @@
               <span class="text-[--gray-700]"> + </span>
 
               <span
-                class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] w-[calc(50%_-_80px)]"
+                class="rounded-md bg-[--gray-50] p-2 font-bold text-xl min-w-[80px] sm:w-auto w-[calc(50%_-_80px)]"
                 >${{ fillDecimalPlaces(getPatientFee(), 2)
                 }}<span class="ml-2 text-[--gray-700]"></span
               ></span>
